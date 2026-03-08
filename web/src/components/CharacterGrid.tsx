@@ -20,7 +20,7 @@ interface Props {
 
 export default function CharacterGrid({ flipped, onToggleFlip }: Props) {
   return (
-    <div className="grid h-full w-full grid-cols-5 gap-1 sm:gap-2 md:gap-3">
+    <div className="grid h-full w-full grid-cols-5 grid-rows-5 gap-1 sm:gap-2 md:gap-3">
       {CHARACTERS.map((char) => (
         <CharacterCard
           key={char.id}

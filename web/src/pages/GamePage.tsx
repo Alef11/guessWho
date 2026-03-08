@@ -75,7 +75,7 @@ export default function GamePage() {
   const opponentName = lobbyState[opponentSlot]?.name ?? "Opponent";
 
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-br from-indigo-950 via-gray-900 to-gray-950">
+    <div className="flex h-screen flex-col overflow-hidden bg-gradient-to-br from-indigo-950 via-gray-900 to-gray-950">
       {/* Top bar */}
       <header className="flex items-center justify-between border-b border-gray-700 bg-gray-800/60 px-4 py-3 backdrop-blur">
         <div className="flex items-center gap-3">
