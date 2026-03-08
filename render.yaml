@@ -1,0 +1,17 @@
+# Render Blueprint — auto-configures the backend service when you
+# connect this repo to Render via the "New Blueprint Instance" flow.
+# See: https://docs.render.com/blueprint-spec
+
+services:
+  - type: web
+    name: guess-who-server
+    runtime: node
+    region: frankfurt           # change to your preferred region
+    plan: free                  # free tier works for hobby projects
+    buildCommand: npm install
+    startCommand: npm start --workspace=server
+    envVars:
+      - key: PORT
+        value: "10000"          # Render default for web services
+      - key: NODE_ENV
+        value: production
