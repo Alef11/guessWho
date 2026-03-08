@@ -1,13 +1,12 @@
 /**
  * @module @guess-who/shared/characters
  *
- * Fixed set of 24 character definitions used on every board.
+ * Fixed set of 25 character definitions used on every board.
  *
  * Images are served from /characters/<Filename>.jpg in the web public
  * folder (copied from the repo's assets/ directory).
  *
- * Why 24? Classic Guess Who has 24 characters, which arranges neatly
- * into a 6 × 4 or 4 × 6 grid.
+ * Why 25? Arranges neatly into a 5 × 5 grid.
  */
 
 import { Character } from "./types";
@@ -41,9 +40,10 @@ const CHARACTER_DATA: [string, string][] = [
   ["Shannien",   "Shannien"],
   ["Thomas",     "Thomas"],
   ["Uwe",        "Uwe"],
+  ["Vincent",    "Vincent"],
 ];
 
-/** All 24 characters available on the board. */
+/** All 25 characters available on the board (5×5 grid). */
 export const CHARACTERS: Character[] = CHARACTER_DATA.map(([name, file], i) => ({
   id: `char-${String(i + 1).padStart(2, "0")}`,
   name,

@@ -1,7 +1,7 @@
 /**
  * @module web/components/CharacterGrid
  *
- * Renders the full 6×4 grid of character cards.
+ * Renders the full 5×5 grid of character cards.
  *
  * Manages the **client-side** flipped state (a Set of character ids).
  * Flipping a card is local-only — it helps the player eliminate
@@ -20,7 +20,7 @@ interface Props {
 
 export default function CharacterGrid({ flipped, onToggleFlip }: Props) {
   return (
-    <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 sm:gap-3">
+    <div className="grid grid-cols-5 gap-2 sm:gap-3">
       {CHARACTERS.map((char) => (
         <CharacterCard
           key={char.id}

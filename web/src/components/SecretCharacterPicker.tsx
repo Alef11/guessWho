@@ -46,7 +46,7 @@ export default function SecretCharacterPicker({ onChoose, hasChosen }: Props) {
           Your opponent will try to guess this character. Pick wisely!
         </p>
 
-        <div className="grid grid-cols-4 gap-2 sm:grid-cols-6 sm:gap-3">
+        <div className="grid grid-cols-5 gap-2 sm:gap-3">
           {CHARACTERS.map((char) => (
             <CharacterCard
               key={char.id}

@@ -33,30 +33,33 @@ export default function CharacterCard({
   return (
     <button
       onClick={onClick}
-      className={`relative flex flex-col items-center rounded-xl border-2 p-2 transition-all duration-200 ${
+      className={`relative overflow-hidden rounded-xl border-2 transition-all duration-200 ${
         selected
-          ? "border-indigo-400 ring-2 ring-indigo-400/50 bg-indigo-900/40"
+          ? "border-indigo-400 ring-2 ring-indigo-400/50"
           : flipped
-            ? "border-gray-700 bg-gray-800/40 opacity-40 grayscale"
-            : "border-gray-600 bg-gray-800 hover:border-gray-400"
+            ? "border-gray-700 opacity-40 grayscale"
+            : "border-gray-600 hover:border-gray-400"
       }`}
     >
-      {/* Avatar */}
+      {/* Full-size image background */}
       <img
         src={assetUrl(character.imageUrl)}
         alt={character.name}
-        className="mb-1 h-14 w-14 rounded-lg object-cover sm:h-16 sm:w-16"
+        className="aspect-square w-full object-cover"
         loading="lazy"
       />
-      {/* Name label */}
-      <span className="text-xs font-medium text-gray-200 sm:text-sm">
-        {character.name}
-      </span>
+
+      {/* Name overlay at bottom */}
+      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent px-2 py-2">
+        <span className="line-clamp-2 text-center text-xs font-semibold text-white sm:text-sm">
+          {character.name}
+        </span>
+      </div>
 
       {/* Flip overlay */}
       {flipped && (
-        <div className="absolute inset-0 flex items-center justify-center rounded-xl bg-gray-900/60">
-          <span className="text-2xl">✕</span>
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-900/60">
+          <span className="text-3xl">✕</span>
         </div>
       )}
     </button>
