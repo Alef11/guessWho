@@ -79,9 +79,13 @@ export default function GamePage() {
       {/* Top bar */}
       <header className="flex items-center justify-between border-b border-gray-700 bg-gray-800/60 px-4 py-3 backdrop-blur">
         <div className="flex items-center gap-3">
-          <span className="rounded bg-gray-700 px-2 py-1 font-mono text-xs tracking-wider text-indigo-300">
+          <button
+            onClick={() => navigator.clipboard.writeText(lobbyState.code)}
+            title="Click to copy"
+            className="cursor-pointer rounded bg-gray-700 px-2 py-1 font-mono text-xs tracking-wider text-indigo-300 transition hover:bg-gray-600"
+          >
             {lobbyState.code}
-          </span>
+          </button>
           <span className="text-sm text-gray-400">
             {lobbyState.player1?.name ?? "?"} vs{" "}
             {lobbyState.player2?.name ?? "?"}

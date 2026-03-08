@@ -33,7 +33,7 @@ export default function CharacterCard({
   return (
     <button
       onClick={onClick}
-      className={`relative flex h-full w-full overflow-hidden rounded-lg border-2 transition-all duration-200 sm:rounded-xl ${
+      className={`relative flex aspect-square h-full max-w-full overflow-hidden rounded-lg border-2 transition-all duration-200 sm:rounded-xl ${
         selected
           ? "border-indigo-400 ring-2 ring-indigo-400/50"
           : flipped
