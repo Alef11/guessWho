@@ -33,7 +33,7 @@ export default function CharacterCard({
   return (
     <button
       onClick={onClick}
-      className={`relative overflow-hidden rounded-xl border-2 transition-all duration-200 ${
+      className={`relative flex h-full w-full overflow-hidden rounded-lg border-2 transition-all duration-200 sm:rounded-xl ${
         selected
           ? "border-indigo-400 ring-2 ring-indigo-400/50"
           : flipped
@@ -45,7 +45,7 @@ export default function CharacterCard({
       <img
         src={assetUrl(character.imageUrl)}
         alt={character.name}
-        className="aspect-square w-full object-cover"
+        className="h-full w-full object-cover"
         loading="lazy"
       />
 

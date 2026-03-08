@@ -94,7 +94,7 @@ export default function GamePage() {
 
       {/* Board + Sidebar */}
       <div className="flex flex-1 overflow-hidden">
-        <main className="flex-1 overflow-y-auto p-4">
+        <main className="flex flex-1 flex-col overflow-hidden p-2 sm:p-4">
           <CharacterGrid flipped={flipped} onToggleFlip={toggleFlip} />
         </main>
 
