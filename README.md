@@ -55,6 +55,26 @@ Then open **http://localhost:5173** in two browser tabs.
 npm run build
 ```
 
+### GitHub Pages Deployment
+
+The frontend is automatically deployed to **GitHub Pages** on every push to `main` via the workflow in `.github/workflows/deploy.yml`.
+
+**Live URL:** [https://Alef11.github.io/guessWho/](https://Alef11.github.io/guessWho/)
+
+#### Setup (one-time)
+
+1. Go to **Settings → Pages** in your GitHub repo.
+2. Under **Build and deployment → Source**, select **GitHub Actions**.
+3. If the backend is hosted remotely (e.g. Render, Railway),
+   go to **Settings → Variables and secrets → Repository variables**
+   and add:
+   - Name: `VITE_SERVER_URL`
+   - Value: the backend URL (e.g. `https://guess-who-server.onrender.com`)
+
+> **Note:** GitHub Pages only serves static files. The Socket.IO backend
+> must be hosted separately. For local-only play, run the server locally
+> and set `VITE_SERVER_URL` to `http://localhost:3001` in a `.env` file in `web/`.
+
 ---
 
 ## How to Play
