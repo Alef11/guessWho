@@ -1,0 +1,52 @@
+# ============================================================
+# Guess Who — Local Docker Compose
+#
+# Spins up both the backend (Express + Socket.IO) and the
+# frontend (Vite dev server with HMR) in a single command:
+#
+#   docker compose up --build
+#
+# Then open http://localhost:5173 in two browser tabs to play.
+#
+# Source code is bind-mounted so changes are reflected live
+# without rebuilding the images (Vite HMR + tsx watch).
+# ============================================================
+
+services:
+  # ---- Backend: Express + Socket.IO ----
+  server:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - NODE_ENV=development
+    volumes:
+      # Bind-mount source for live reload via tsx watch.
+      - ./shared/src:/app/shared/src
+      - ./server/src:/app/server/src
+    # Override CMD to use watch mode in development.
+    command: ["npm", "run", "dev", "--workspace=server"]
+    restart: unless-stopped
+
+  # ---- Frontend: Vite dev server ----
+  web:
+    build:
+      context: .
+      dockerfile: web/Dockerfile
+    ports:
+      - "5173:5173"
+    environment:
+      # Tell Vite's proxy to target the "server" container.
+      - VITE_WS_PROXY=http://server:3001
+    volumes:
+      # Bind-mount source for Vite HMR.
+      - ./shared/src:/app/shared/src
+      - ./web/src:/app/web/src
+      - ./web/public:/app/web/public
+      - ./web/index.html:/app/web/index.html
+    depends_on:
+      - server
+    restart: unless-stopped

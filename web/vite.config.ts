@@ -11,8 +11,10 @@ export default defineConfig(({ mode }) => ({
   server: {
     port: 5173,
     proxy: {
+      // In Docker the backend container is reachable via the service
+      // name "server". Outside Docker it falls back to localhost.
       "/socket.io": {
-        target: "http://localhost:3001",
+        target: process.env.VITE_WS_PROXY ?? "http://localhost:3001",
         ws: true,
       },
     },
