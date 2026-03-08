@@ -15,6 +15,7 @@
  */
 
 import type { Character } from "@guess-who/shared";
+import { assetUrl } from "../utils/assetUrl";
 
 interface Props {
   character: Character;
@@ -42,7 +43,7 @@ export default function CharacterCard({
     >
       {/* Avatar */}
       <img
-        src={character.imageUrl}
+        src={assetUrl(character.imageUrl)}
         alt={character.name}
         className="mb-1 h-14 w-14 rounded-lg object-cover sm:h-16 sm:w-16"
         loading="lazy"
