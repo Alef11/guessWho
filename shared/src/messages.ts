@@ -25,19 +25,21 @@ import type { GameState, GuessResult, LobbyState } from "./types";
 /* ------------------------------------------------------------------ */
 
 export const C2S = {
-  LOBBY_CREATE:  "lobby:create",
-  LOBBY_JOIN:    "lobby:join",
-  LOBBY_READY:   "lobby:ready",
-  GAME_CHOOSE:   "game:choose",
-  GAME_GUESS:    "game:guess",
-  GAME_RESET:    "game:reset",
+  LOBBY_CREATE:     "lobby:create",
+  LOBBY_JOIN:       "lobby:join",
+  LOBBY_READY:      "lobby:ready",
+  GAME_CHOOSE:      "game:choose",
+  GAME_GUESS:       "game:guess",
+  GAME_RESET:       "game:reset",
+  GAME_FLIP_COUNT:  "game:flipCount",
 } as const;
 
 export const S2C = {
-  LOBBY_STATE:   "lobby:state",
-  GAME_STATE:    "game:state",
-  GAME_RESULT:   "game:result",
-  ERROR:         "error",
+  LOBBY_STATE:             "lobby:state",
+  GAME_STATE:              "game:state",
+  GAME_RESULT:             "game:result",
+  GAME_OPPONENT_FLIP_COUNT:"game:opponentFlipCount",
+  ERROR:                   "error",
 } as const;
 
 /* ------------------------------------------------------------------ */
@@ -67,6 +69,10 @@ export interface GameGuessPayload {
 
 // game:reset has no payload (empty object)
 
+export interface GameFlipCountPayload {
+  count: number;
+}
+
 /* ------------------------------------------------------------------ */
 /*  Server → Client payloads                                          */
 /* ------------------------------------------------------------------ */
@@ -82,4 +88,8 @@ export type GuessResultPayload = GuessResult;
 
 export interface ErrorPayload {
   message: string;
+}
+
+export interface OpponentFlipCountPayload {
+  count: number;
 }

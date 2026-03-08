@@ -13,11 +13,12 @@
  * Design reference: designs/guess-who.pen → Frame "Game Board"
  */
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useGame } from "../context/GameContext";
 import CharacterGrid from "../components/CharacterGrid";
 import SecretCharacterPicker from "../components/SecretCharacterPicker";
 import GuessModal from "../components/GuessModal";
+import GameSidebar from "../components/GameSidebar";
 
 export default function GamePage() {
   const {
@@ -28,6 +29,10 @@ export default function GamePage() {
     makeGuess,
     error,
     clearError,
+    opponentFlipCount,
+    mySecretCharacterId,
+    sendFlipCount,
+    setMySecretCharacterId,
   } = useGame();
 
   // Client-only: which cards the player has flipped down.
@@ -43,6 +48,20 @@ export default function GamePage() {
     });
   }, []);
 
+  // Send flip count to opponent whenever it changes.
+  useEffect(() => {
+    sendFlipCount(flipped.size);
+  }, [flipped, sendFlipCount]);
+
+  // Wrap chooseCharacter to also store the secret locally.
+  const handleChoose = useCallback(
+    (characterId: string) => {
+      setMySecretCharacterId(characterId);
+      chooseCharacter(characterId);
+    },
+    [chooseCharacter, setMySecretCharacterId],
+  );
+
   if (!lobbyState || !gameState || !mySlot) return null;
 
   const hasChosen =
@@ -51,6 +70,9 @@ export default function GamePage() {
       : gameState.player2HasChosen;
 
   const phase = gameState.phase;
+
+  const opponentSlot = mySlot === "player1" ? "player2" : "player1";
+  const opponentName = lobbyState[opponentSlot]?.name ?? "Opponent";
 
   return (
     <div className="flex min-h-screen flex-col bg-gradient-to-br from-indigo-950 via-gray-900 to-gray-950">
@@ -70,10 +92,18 @@ export default function GamePage() {
         </span>
       </header>
 
-      {/* Board */}
-      <main className="flex-1 overflow-y-auto p-4">
-        <CharacterGrid flipped={flipped} onToggleFlip={toggleFlip} />
-      </main>
+      {/* Board + Sidebar */}
+      <div className="flex flex-1 overflow-hidden">
+        <main className="flex-1 overflow-y-auto p-4">
+          <CharacterGrid flipped={flipped} onToggleFlip={toggleFlip} />
+        </main>
+
+        <GameSidebar
+          opponentFlipCount={opponentFlipCount}
+          mySecretCharacterId={mySecretCharacterId}
+          opponentName={opponentName}
+        />
+      </div>
 
       {/* Bottom action bar */}
       {phase === "IN_PROGRESS" && (
@@ -90,7 +120,7 @@ export default function GamePage() {
       {/* Secret character picker overlay */}
       {phase === "CHOOSING_CHARACTERS" && (
         <SecretCharacterPicker
-          onChoose={chooseCharacter}
+          onChoose={handleChoose}
           hasChosen={hasChosen}
         />
       )}

@@ -27,6 +27,7 @@ import type {
   GameState,
   GuessResult,
   ErrorPayload,
+  OpponentFlipCountPayload,
 } from "@guess-who/shared";
 import { S2C, C2S } from "@guess-who/shared";
 import { socket } from "../socket";
@@ -55,6 +56,10 @@ interface GameContextValue {
   mySlot: "player1" | "player2" | null;
   /** Whether the socket is connected. */
   connected: boolean;
+  /** Number of characters the opponent has flipped. */
+  opponentFlipCount: number;
+  /** The character id this player chose as their secret. */
+  mySecretCharacterId: string | null;
 
   // Actions
   createLobby: (name: string) => void;
@@ -65,6 +70,8 @@ interface GameContextValue {
   resetGame: () => void;
   clearError: () => void;
   goToLanding: () => void;
+  sendFlipCount: (count: number) => void;
+  setMySecretCharacterId: (id: string) => void;
 }
 
 const GameContext = createContext<GameContextValue | null>(null);
@@ -81,6 +88,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
   const [guessResult, setGuessResult] = useState<GuessResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [connected, setConnected] = useState(false);
+  const [opponentFlipCount, setOpponentFlipCount] = useState(0);
+  const [mySecretCharacterId, setMySecretCharacterId] = useState<string | null>(null);
 
   // Derive which slot this client occupies.
   const mySlot = useMemo<"player1" | "player2" | null>(() => {
@@ -127,6 +136,9 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     function onError(payload: ErrorPayload) {
       setError(payload.message);
     }
+    function onOpponentFlipCount(payload: OpponentFlipCountPayload) {
+      setOpponentFlipCount(payload.count);
+    }
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
@@ -134,6 +146,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     socket.on(S2C.GAME_STATE, onGameState);
     socket.on(S2C.GAME_RESULT, onGuessResult);
     socket.on(S2C.ERROR, onError);
+    socket.on(S2C.GAME_OPPONENT_FLIP_COUNT, onOpponentFlipCount);
 
     return () => {
       socket.off("connect", onConnect);
@@ -142,6 +155,7 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       socket.off(S2C.GAME_STATE, onGameState);
       socket.off(S2C.GAME_RESULT, onGuessResult);
       socket.off(S2C.ERROR, onError);
+      socket.off(S2C.GAME_OPPONENT_FLIP_COUNT, onOpponentFlipCount);
     };
   }, []);
 
@@ -177,10 +191,16 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
 
   const resetGameAction = useCallback(() => {
     setGuessResult(null);
+    setOpponentFlipCount(0);
+    setMySecretCharacterId(null);
     socket.emit(C2S.GAME_RESET);
   }, []);
 
   const clearError = useCallback(() => setError(null), []);
+
+  const sendFlipCount = useCallback((count: number) => {
+    socket.emit(C2S.GAME_FLIP_COUNT, { count });
+  }, []);
 
   const goToLanding = useCallback(() => {
     socket.disconnect();
@@ -189,6 +209,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
     setGameState(null);
     setGuessResult(null);
     setError(null);
+    setOpponentFlipCount(0);
+    setMySecretCharacterId(null);
   }, []);
 
   /* ---------- Value ---------------------------------------------- */
@@ -203,6 +225,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       error,
       mySlot,
       connected,
+      opponentFlipCount,
+      mySecretCharacterId,
       createLobby,
       joinLobby,
       setReady,
@@ -211,6 +235,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       resetGame: resetGameAction,
       clearError,
       goToLanding,
+      sendFlipCount,
+      setMySecretCharacterId,
     }),
     [
       page,
@@ -221,6 +247,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       error,
       mySlot,
       connected,
+      opponentFlipCount,
+      mySecretCharacterId,
       createLobby,
       joinLobby,
       setReady,
@@ -229,6 +257,8 @@ export function GameProvider({ children }: { children: React.ReactNode }) {
       resetGameAction,
       clearError,
       goToLanding,
+      sendFlipCount,
+      setMySecretCharacterId,
     ],
   );
 

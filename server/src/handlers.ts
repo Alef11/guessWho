@@ -37,6 +37,7 @@ import type {
   LobbyReadyPayload,
   GameChoosePayload,
   GameGuessPayload,
+  GameFlipCountPayload,
   GuessResult,
 } from "@guess-who/shared";
 
@@ -162,6 +163,21 @@ export function registerHandlers(io: Server, socket: Socket): void {
 
     resetGame(found.lobby);
     broadcastState(io, found.lobby);
+  });
+
+  /* ---- game:flipCount ---------------------------------------------- */
+  socket.on(C2S.GAME_FLIP_COUNT, (payload: GameFlipCountPayload) => {
+    const found = findLobbyBySocket(socket.id);
+    if (!found) return;
+
+    const { lobby, slot } = found;
+    const opponentSlot = slot === "player1" ? "player2" : "player1";
+    const opponent = lobby[opponentSlot];
+    if (!opponent) return;
+
+    io.to(opponent.socketId).emit(S2C.GAME_OPPONENT_FLIP_COUNT, {
+      count: payload.count,
+    });
   });
 
   /* ---- disconnect -------------------------------------------------- */
