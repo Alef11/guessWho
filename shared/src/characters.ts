@@ -3,8 +3,8 @@
  *
  * Fixed set of 24 character definitions used on every board.
  *
- * Each character currently uses a placeholder image generated via the
- * DiceBear "initials" avatar API — replace with real artwork later.
+ * Images are served from /characters/<Filename>.jpg in the web public
+ * folder (copied from the repo's assets/ directory).
  *
  * Why 24? Classic Guess Who has 24 characters, which arranges neatly
  * into a 6 × 4 or 4 × 6 grid.
@@ -12,28 +12,42 @@
 
 import { Character } from "./types";
 
-const NAMES = [
-  "Alex",   "Blake",  "Casey",  "Dana",
-  "Ellis",  "Frankie","Gray",   "Harper",
-  "Indigo", "Jordan", "Kelly",  "Lane",
-  "Morgan", "Nico",   "Oakley", "Parker",
-  "Quinn",  "Riley",  "Sage",   "Taylor",
-  "Uma",    "Val",    "Wren",   "Zephyr",
+/**
+ * Each entry is [display name, image filename (without extension)].
+ * The filename must match the file in web/public/characters/.
+ */
+const CHARACTER_DATA: [string, string][] = [
+  ["Ali",        "Ali"],
+  ["Anna-Lena",  "AnnaLena"],
+  ["Batolomeus", "Batolomeus"],
+  ["Bixi-Baxi",  "Bixi-Baxi"],
+  ["Bob",        "Bob"],
+  ["Celina",     "Celina"],
+  ["Chu Ching",  "ChuChing"],
+  ["Dorotea",    "Dorotea"],
+  ["Esteban",    "Esteban"],
+  ["Gertrude",   "Gertrude"],
+  ["Hans",       "Hans"],
+  ["Jannis",     "Jannis"],
+  ["Jennifer",   "Jennifer"],
+  ["Ling Lang",  "LingLang"],
+  ["Madlen",     "Madlen"],
+  ["Markus",     "Markus"],
+  ["Rachel",     "Rachel"],
+  ["Raphaela",   "Raphaela"],
+  ["Rolf",       "Rolf"],
+  ["Sabine",     "Sabine"],
+  ["Shaggy",     "Shaggy"],
+  ["Shannien",   "Shannien"],
+  ["Thomas",     "Thomas"],
+  ["Uwe",        "Uwe"],
 ];
 
-/**
- * Build a placeholder avatar URL for a given name.
- * Uses DiceBear "initials" style — deterministic, no API key needed.
- */
-function avatarUrl(name: string): string {
-  return `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name)}&backgroundColor=random`;
-}
-
 /** All 24 characters available on the board. */
-export const CHARACTERS: Character[] = NAMES.map((name, i) => ({
+export const CHARACTERS: Character[] = CHARACTER_DATA.map(([name, file], i) => ({
   id: `char-${String(i + 1).padStart(2, "0")}`,
   name,
-  imageUrl: avatarUrl(name),
+  imageUrl: `/characters/${file}.jpg`,
 }));
 
 /** Quick lookup map: characterId → Character. */
